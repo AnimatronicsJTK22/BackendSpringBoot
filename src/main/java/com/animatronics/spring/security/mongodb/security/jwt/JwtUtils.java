@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.security.jwt;
+package com.animatronics.spring.security.mongodb.security.jwt;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
-import com.bezkoder.spring.security.mongodb.security.services.UserDetailsImpl;
+import com.animatronics.spring.security.mongodb.security.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 

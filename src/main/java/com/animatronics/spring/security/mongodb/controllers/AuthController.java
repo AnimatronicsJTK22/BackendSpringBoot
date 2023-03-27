@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.controllers;
+package com.animatronics.spring.security.mongodb.controllers;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.spring.security.mongodb.models.ERole;
-import com.bezkoder.spring.security.mongodb.models.Role;
-import com.bezkoder.spring.security.mongodb.models.User;
-import com.bezkoder.spring.security.mongodb.payload.request.LoginRequest;
-import com.bezkoder.spring.security.mongodb.payload.request.SignupRequest;
-import com.bezkoder.spring.security.mongodb.payload.response.UserInfoResponse;
-import com.bezkoder.spring.security.mongodb.payload.response.MessageResponse;
-import com.bezkoder.spring.security.mongodb.repository.RoleRepository;
-import com.bezkoder.spring.security.mongodb.repository.UserRepository;
-import com.bezkoder.spring.security.mongodb.security.jwt.JwtUtils;
-import com.bezkoder.spring.security.mongodb.security.services.UserDetailsImpl;
+import com.animatronics.spring.security.mongodb.models.ERole;
+import com.animatronics.spring.security.mongodb.models.Role;
+import com.animatronics.spring.security.mongodb.models.User;
+import com.animatronics.spring.security.mongodb.payload.request.LoginRequest;
+import com.animatronics.spring.security.mongodb.payload.request.SignupRequest;
+import com.animatronics.spring.security.mongodb.payload.response.MessageResponse;
+import com.animatronics.spring.security.mongodb.payload.response.UserInfoResponse;
+import com.animatronics.spring.security.mongodb.repository.RoleRepository;
+import com.animatronics.spring.security.mongodb.repository.UserRepository;
+import com.animatronics.spring.security.mongodb.security.jwt.JwtUtils;
+import com.animatronics.spring.security.mongodb.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -53,7 +53,7 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
-  @PostMapping("/signin")
+  @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager.authenticate(
@@ -76,7 +76,7 @@ public class AuthController {
                                    roles));
   }
 
-  @PostMapping("/signup")
+  @PostMapping("/register")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity

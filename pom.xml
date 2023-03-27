@@ -8,13 +8,13 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.bezkoder</groupId>
+	<groupId>com.animatronics</groupId>
 	<artifactId>spring-boot-mongodb-login</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-mongodb-login</name>
 	<description>Spring Boot and MongoDB: Login example with Spring Security, JWT - Rest API</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>19</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -35,6 +35,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>2.3.2</version>
 		</dependency>
 		
 		<dependency>

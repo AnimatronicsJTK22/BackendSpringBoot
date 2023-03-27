@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.payload.request;
+package com.animatronics.spring.security.mongodb.payload.request;
 
 import java.util.Set;
 

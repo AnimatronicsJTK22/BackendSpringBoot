@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.controllers;
+package com.animatronics.spring.security.mongodb.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;

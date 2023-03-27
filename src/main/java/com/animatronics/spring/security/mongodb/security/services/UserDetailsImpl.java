@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.security.services;
+package com.animatronics.spring.security.mongodb.security.services;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.bezkoder.spring.security.mongodb.models.User;
+import com.animatronics.spring.security.mongodb.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {

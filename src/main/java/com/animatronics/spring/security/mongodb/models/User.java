@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.models;
+package com.animatronics.spring.security.mongodb.models;
 
 import java.util.HashSet;
 import java.util.Set;

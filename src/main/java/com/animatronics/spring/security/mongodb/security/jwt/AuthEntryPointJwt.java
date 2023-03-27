@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.security.jwt;
+package com.animatronics.spring.security.mongodb.security.jwt;
 
 import java.io.IOException;
 import java.util.HashMap;

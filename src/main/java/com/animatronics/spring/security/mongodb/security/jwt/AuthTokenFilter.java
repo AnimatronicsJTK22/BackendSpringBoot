@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.security.jwt;
+package com.animatronics.spring.security.mongodb.security.jwt;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.bezkoder.spring.security.mongodb.security.services.UserDetailsServiceImpl;
+import com.animatronics.spring.security.mongodb.security.services.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired

@@ -1,4 +1,4 @@
-package com.bezkoder.spring.security.mongodb.payload.response;
+package com.animatronics.spring.security.mongodb.payload.response;
 
 public class MessageResponse {
   private String message;
