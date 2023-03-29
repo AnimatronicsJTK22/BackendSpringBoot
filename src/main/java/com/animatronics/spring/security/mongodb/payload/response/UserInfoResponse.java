@@ -2,17 +2,20 @@ package com.animatronics.spring.security.mongodb.payload.response;
 
 import java.util.List;
 
+
 public class UserInfoResponse {
   private String id;
   private String username;
   private String email;
   private List<String> roles;
+  private String accessToken;
 
-  public UserInfoResponse(String id, String username, String email, List<String> roles) {
+  public UserInfoResponse(String id, String username, String email, List<String> roles, String accessToken) {
     this.id = id;
     this.username = username;
     this.email = email;
     this.roles = roles;
+    this.accessToken = accessToken;
   }
 
   public String getId() {
@@ -41,5 +44,13 @@ public class UserInfoResponse {
 
   public List<String> getRoles() {
     return roles;
+  }
+
+  public String getAccessToken() {
+    return this.accessToken;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
   }
 }
