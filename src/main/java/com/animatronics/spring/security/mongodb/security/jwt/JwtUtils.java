@@ -29,14 +29,14 @@ public class JwtUtils {
   @Value("${animatronics.app.jwtCookieName}")
   private String jwtCookie;
 
-  public String getJwtFromCookies(HttpServletRequest request) {
-    Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-    if (cookie != null) {
-      return cookie.getValue();
-    } else {
-      return null;
-    }
-  }
+  // public String getJwtFromCookies(HttpServletRequest request) {
+  //   Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+  //   if (cookie != null) {
+  //     return cookie.getValue();
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   public String getJwtFromRequest(HttpServletRequest request) {
     String authHeader = request.getHeader("Authorization");
