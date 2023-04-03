@@ -1,5 +1,8 @@
 package com.animatronics.spring.security.mongodb.models;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,19 +10,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Diary {
   @Id
   private String id;
-
   private String title;
   private String content;
-  private boolean published;
+  private boolean visibility;
+  private String owner;
+  private LocalDateTime time;
 
   public Diary() {
 
   }
 
-  public Diary(String title, String content, boolean published) {
+  public Diary(String title, String content, boolean visibility, String owner, LocalDateTime time) {
     this.title = title;
     this.content = content;
-    this.published = published;
+    this.visibility = visibility;
+    this.owner = owner;
+    this.time = time;
   }
 
   public String getId() {
@@ -42,16 +48,35 @@ public class Diary {
     this.content = content;
   }
 
-  public boolean isPublished() {
-    return published;
+  public boolean isVisible() {
+    return visibility;
   }
 
-  public void setPublished(boolean isPublished) {
-    this.published = isPublished;
+  public void setVisibility(boolean isvisibility) {
+    this.visibility = isvisibility;
+  }
+
+  public String getOwner() {
+    return this.owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
+  public LocalDateTime getTime() {
+    return this.time;
+  }
+
+  public void setTime(LocalDateTime time) {
+    this.time = time;
   }
 
   @Override
   public String toString() {
-    return "Diary [id=" + id + ", title=" + title + ", content=" + content + ", published=" + published + "]";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+    String formattedDate = getTime().format(formatter);
+    return "Diary [id=" + id + ", title=" + title + ", content=" + content + ", visibility=" + visibility + ", owner="
+        + owner + ", time=" + formattedDate + "]";
   }
 }
