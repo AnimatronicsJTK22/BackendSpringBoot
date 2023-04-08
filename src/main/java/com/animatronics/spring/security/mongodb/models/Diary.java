@@ -48,12 +48,12 @@ public class Diary {
     this.content = content;
   }
 
-  public boolean isVisible() {
+  public boolean isVisibility() {
     return visibility;
   }
 
-  public void setVisibility(boolean isvisibility) {
-    this.visibility = isvisibility;
+  public void setVisibility(boolean visibility) {
+    this.visibility = visibility;
   }
 
   public String getOwner() {

@@ -1,11 +1,11 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -104,7 +104,8 @@ public class DiaryController {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       String owner = authentication.getName();
 
-      Diary _diary = diaryRepository.save(new Diary(diary.getTitle(), diary.getContent(), false, owner, LocalDateTime.now()));
+      Diary _diary = diaryRepository
+          .save(new Diary(diary.getTitle(), diary.getContent(), false, owner, LocalDateTime.now()));
 
       return new ResponseEntity<>(_diary, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -115,13 +116,20 @@ public class DiaryController {
   @PutMapping("/diaries/{id}")
   public ResponseEntity<Diary> updateDiary(@PathVariable("id") String id, @RequestBody Diary diary) {
     Optional<Diary> diaryData = diaryRepository.findById(id);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String user = ((UserDetails) authentication.getPrincipal()).getUsername();
+    String diaryOwner = diaryRepository.findById(id).get().getOwner();
 
     if (diaryData.isPresent()) {
       Diary _diary = diaryData.get();
       _diary.setTitle(diary.getTitle());
       _diary.setContent(diary.getContent());
-      _diary.setVisibility(diary.isVisible());
-      return new ResponseEntity<>(diaryRepository.save(_diary), HttpStatus.OK);
+      _diary.setVisibility(diary.isVisibility());
+      if (user.equals(diaryOwner)) {
+        return new ResponseEntity<>(diaryRepository.save(_diary), HttpStatus.OK);
+      }else{
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+      }
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -130,27 +138,47 @@ public class DiaryController {
   @DeleteMapping("/diaries/{id}")
   public ResponseEntity<HttpStatus> deleteDiary(@PathVariable("id") String id) {
     try {
-      diaryRepository.deleteById(id);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      String user = ((UserDetails) authentication.getPrincipal()).getUsername();
+      String diaryOwner = diaryRepository.findById(id).get().getOwner();
+
+      Optional<User> userData = userRepository.findByUsername(user);
+      Set<Role> roles = userData.get().getRoles();
+      boolean isAdmin = false;
+
+      for (Role role : roles) {
+        if (role.getId().equals("6420f5471a943f643d51bcf6")) {
+          isAdmin = true;
+          break;
+        }
+      }
+
+      if (user.equals(diaryOwner) || isAdmin == true) {
+        diaryRepository.deleteById(id);
+      }
+
+      return new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @DeleteMapping("/diaries")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<HttpStatus> deleteAllDiaries() {
     try {
       diaryRepository.deleteAll();
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      return new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @GetMapping("/diaries/published")
+  @GetMapping("/diaries/public")
+  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
   public ResponseEntity<List<Diary>> findByVisible() {
     try {
-      List<Diary> diarys = diaryRepository.findByVisible(true);
+      List<Diary> diarys = diaryRepository.findByVisibility(true);
 
       if (diarys.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
