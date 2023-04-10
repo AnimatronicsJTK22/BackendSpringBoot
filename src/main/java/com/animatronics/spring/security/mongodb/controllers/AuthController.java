@@ -70,7 +70,7 @@ public class AuthController {
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    ResponseCookie jwtCookie = jwtUtils.generateJwtLocalStorage(userDetails);
 
     List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
