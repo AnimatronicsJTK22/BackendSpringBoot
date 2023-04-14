@@ -8,6 +8,8 @@ import com.animatronics.spring.security.mongodb.models.Diary;
 
 public interface DiaryRepository extends MongoRepository<Diary, String> {
   List<Diary> findByVisibility(boolean visibility);
+
   List<Diary> findByTitleContaining(String title);
+
   List<Diary> findByOwner(String owner);
 }
