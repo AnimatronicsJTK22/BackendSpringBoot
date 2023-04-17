@@ -192,7 +192,7 @@ public class AuthController {
     }
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/users/{id}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<MessageResponse> deleteUserById(@PathVariable("id") String id) {
     try {
