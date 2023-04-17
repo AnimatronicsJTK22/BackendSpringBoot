@@ -9,5 +9,5 @@ import com.animatronics.spring.security.mongodb.models.MoneyDiscipline;
 public interface MDRepository extends MongoRepository<MoneyDiscipline, String> {
   List<MoneyDiscipline> findByOwner(String owner);
 
-  Lisr<MoneyDiscipline> findbyId(String id);
+  List<MoneyDiscipline> findbyId(String id);
 }
