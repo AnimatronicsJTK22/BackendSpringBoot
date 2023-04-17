@@ -1,6 +1,8 @@
 package com.animatronics.spring.security.mongodb.models;
 
-import java.lang.annotation.Inherited;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -63,5 +65,5 @@ public class History {
         String formattedDate = getTime().format(formatter);
         return "History [id=" + id + ", desc=" + desc + ", balanceDesc=" + balanceDesc + ", time=" + formattedDate + "]";
     }
-
+        
 }
