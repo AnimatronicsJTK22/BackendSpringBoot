@@ -20,11 +20,12 @@ public class History {
     public History() {
 
     }
-
-    public History(String id, String desc, String balanceDesc) {
+    
+    public History(String id, String desc, String balanceDesc, LocalDateTime time) {
         this.id = id;
         this.desc = desc;
         this.balanceDesc = balanceDesc;
+        this.time = time;
     }
 
     public String getId() {
