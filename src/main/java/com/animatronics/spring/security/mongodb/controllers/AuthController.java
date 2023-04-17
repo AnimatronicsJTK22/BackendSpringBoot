@@ -1,5 +1,6 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,10 +33,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.animatronics.spring.security.mongodb.models.ERole;
 import com.animatronics.spring.security.mongodb.models.Role;
 import com.animatronics.spring.security.mongodb.models.User;
+import com.animatronics.spring.security.mongodb.models.MoneyDiscipline;
 import com.animatronics.spring.security.mongodb.payload.request.LoginRequest;
 import com.animatronics.spring.security.mongodb.payload.request.SignupRequest;
 import com.animatronics.spring.security.mongodb.payload.response.MessageResponse;
 import com.animatronics.spring.security.mongodb.payload.response.UserInfoResponse;
+import com.animatronics.spring.security.mongodb.repository.MDRepository;
 import com.animatronics.spring.security.mongodb.repository.RoleRepository;
 import com.animatronics.spring.security.mongodb.repository.UserRepository;
 import com.animatronics.spring.security.mongodb.security.jwt.JwtUtils;
@@ -47,6 +50,9 @@ import com.animatronics.spring.security.mongodb.security.services.UserDetailsImp
 public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
+
+  @Autowired
+  MDRepository mdRepository;
 
   @Autowired
   UserRepository userRepository;
@@ -136,7 +142,9 @@ public class AuthController {
     user.setRoles(roles);
     userRepository.save(user);
 
-    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    mdRepository.save(new MoneyDiscipline(0, signUpRequest.getUsername(), LocalDateTime.now()));
+
+    return ResponseEntity.ok(new MessageResponse("User and money notes registered successfully!"));
   }
 
   @GetMapping("/users")
@@ -184,7 +192,7 @@ public class AuthController {
     }
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/users/{id}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<MessageResponse> deleteUserById(@PathVariable("id") String id) {
     try {

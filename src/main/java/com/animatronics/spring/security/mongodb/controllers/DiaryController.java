@@ -87,8 +87,21 @@ public class DiaryController {
 
     Optional<Diary> diaryData = diaryRepository.findById(id);
 
+    // Untuk mengetahui apakah yang login adalah admin atau bukan
+    Optional<User> userData = userRepository.findByUsername(owner);
+    Set<Role> roles = userData.get().getRoles();
+    boolean isAdmin = false;
+
+    for (Role role : roles) {
+      if (role.getId().equals("6420f5471a943f643d51bcf6")) {
+        isAdmin = true;
+        break;
+      }
+    }
+    // ------------------------------------------------------------
+
     if (diaryData.isPresent()) {
-      if (diaryData.get().getOwner().equals(owner)) {
+      if (diaryData.get().getOwner().equals(owner) || isAdmin) {
         return new ResponseEntity<>(diaryData.get(), HttpStatus.OK);
       } else {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -120,14 +133,25 @@ public class DiaryController {
     String user = ((UserDetails) authentication.getPrincipal()).getUsername();
     String diaryOwner = diaryRepository.findById(id).get().getOwner();
 
+    Optional<User> userData = userRepository.findByUsername(user);
+    Set<Role> roles = userData.get().getRoles();
+    boolean isAdmin = false;
+
+    for (Role role : roles) {
+      if (role.getId().equals("6420f5471a943f643d51bcf6")) {
+        isAdmin = true;
+        break;
+      }
+    }
+
     if (diaryData.isPresent()) {
       Diary _diary = diaryData.get();
       _diary.setTitle(diary.getTitle());
       _diary.setContent(diary.getContent());
       _diary.setVisibility(diary.isVisibility());
-      if (user.equals(diaryOwner)) {
+      if (user.equals(diaryOwner) || isAdmin) {
         return new ResponseEntity<>(diaryRepository.save(_diary), HttpStatus.OK);
-      }else{
+      } else {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
       }
     } else {
