@@ -39,21 +39,34 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody MoneyDiscipline md, @RequestBody float deposit, @RequestBody float withdraw) {
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody MoneyDiscipline md,
+            @RequestBody double deposit, @RequestBody double withdraw) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = ((UserDetails) authentication.getPrincipal()).getUsername();
         String mdOwner = mdRepository.findById(id).get().getOwner();
+        withdraw = 0;
+        deposit = 0;
+        boolean condition = false;
 
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
-            
-            
-            _md.setBalance(md.getBalance());
-            if (user.equals(mdOwner)) {
-                return new ResponseEntity<>(mdRepository.save(_md), HttpStatus.OK);
+
+            if (md.getBalance() < withdraw) {
+                condition = false;
             } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                condition = true;
+            }
+
+            if (condition == true) {
+                _md.setBalance(md.getBalance() + deposit - withdraw);
+                if (user.equals(mdOwner)) {
+                    return new ResponseEntity<>(mdRepository.save(_md), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -11,7 +11,6 @@ public class MoneyDiscipline {
   private String id;
   private double balance;
   private String owner;
-  private LocalDateTime timeUpdated;
 
   public MoneyDiscipline() {
 
@@ -20,7 +19,6 @@ public class MoneyDiscipline {
   public MoneyDiscipline(double balance, String owner, LocalDateTime timeUpdated) {
     this.balance = balance;
     this.owner = owner;
-    this.timeUpdated = timeUpdated;
   }
 
   public String getId() {
@@ -47,17 +45,9 @@ public class MoneyDiscipline {
     this.owner = owner;
   }
 
-  public LocalDateTime getTimeUpdated() {
-    return timeUpdated;
-  }
-
-  public void setTimeUpdated(LocalDateTime timeUpdated) {
-    this.timeUpdated = timeUpdated;
-  }
-
   @Override
   public String toString() {
     return "MoneyDiscipline [id=" + id + ", balance=" + balance + ", owner="
-        + owner + ", timeUpdated=" + timeUpdated + "]";
+        + owner + "]";
   }
 }
