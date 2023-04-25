@@ -1,5 +1,6 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
+import java.util.Map;
 // import java.time.LocalDateTime;
 // import java.util.List;
 import java.util.Optional;
@@ -39,35 +40,25 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody MoneyDiscipline md,
-            @RequestBody double deposit, @RequestBody double withdraw) {
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id,
+            @RequestBody Map<String, Double> body) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = ((UserDetails) authentication.getPrincipal()).getUsername();
         String mdOwner = mdRepository.findById(id).get().getOwner();
-        withdraw = 0;
-        deposit = 0;
-        boolean condition = false;
 
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
 
-            if (md.getBalance() < withdraw) {
-                condition = false;
+            if (user.equals(mdOwner)) {
+                double deposit = body.get("deposit");
+                double withdraw = body.get("withdraw");
+                double tempBalance = mdData.get().getBalance() + deposit - withdraw;
+                _md.setBalance(tempBalance);
             } else {
-                condition = true;
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
-
-            if (condition == true) {
-                _md.setBalance(md.getBalance() + deposit - withdraw);
-                if (user.equals(mdOwner)) {
-                    return new ResponseEntity<>(mdRepository.save(_md), HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-                }
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+            return new ResponseEntity<>(mdRepository.save(_md), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

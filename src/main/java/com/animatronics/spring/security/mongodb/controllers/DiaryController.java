@@ -99,8 +99,8 @@ public class DiaryController {
       }
     }
     // ------------------------------------------------------------
-
     if (diaryData.isPresent()) {
+
       if (diaryData.get().getOwner().equals(owner) || isAdmin) {
         return new ResponseEntity<>(diaryData.get(), HttpStatus.OK);
       } else {

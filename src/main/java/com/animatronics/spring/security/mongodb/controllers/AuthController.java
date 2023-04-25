@@ -200,7 +200,6 @@ public class AuthController {
       String mdId = mdRepository.findByOwner(owner).get().getId();
       userRepository.deleteById(id);
       mdRepository.deleteById(mdId);
-      
 
       return ResponseEntity.ok(new MessageResponse("User with ID " + id + " has been deleted successfully!"));
     } catch (Exception e) {
