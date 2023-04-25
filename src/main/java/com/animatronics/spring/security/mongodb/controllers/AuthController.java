@@ -196,7 +196,12 @@ public class AuthController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<MessageResponse> deleteUserById(@PathVariable("id") String id) {
     try {
+      String owner = userRepository.findById(id).get().getUsername();
+      String mdId = mdRepository.findByOwner(owner).get().getId();
       userRepository.deleteById(id);
+      mdRepository.deleteById(mdId);
+      
+
       return ResponseEntity.ok(new MessageResponse("User with ID " + id + " has been deleted successfully!"));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

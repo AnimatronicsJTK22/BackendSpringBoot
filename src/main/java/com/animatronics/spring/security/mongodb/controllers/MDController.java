@@ -1,11 +1,11 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
-import java.time.LocalDateTime;
-import java.util.List;
+// import java.time.LocalDateTime;
+// import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,4 +73,33 @@ public class MDController {
         }
     }
 
+    @DeleteMapping("/money/{id}")
+    public ResponseEntity<HttpStatus> deleteMD(@PathVariable("id") String id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String user = ((UserDetails) authentication.getPrincipal()).getUsername();
+            String mdOwner = mdRepository.findById(id).get().getOwner();
+
+            Optional<User> userData = userRepository.findByUsername(user);
+            Set<Role> roles = userData.get().getRoles();
+            boolean isAdmin = false;
+
+            for (Role role : roles) {
+                if (role.getId().equals("6420f5471a943f643d51bcf6")) {
+                    isAdmin = true;
+                    break;
+                }
+            }
+
+            if (user.equals(mdOwner) || isAdmin == true) {
+                mdRepository.deleteById(id);
+            } else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

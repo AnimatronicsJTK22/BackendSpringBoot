@@ -6,6 +6,4 @@ import com.animatronics.spring.security.mongodb.models.History;
 
 public interface HistoryRepository extends MongoRepository<History, String> {
 
-    
-    
 }
