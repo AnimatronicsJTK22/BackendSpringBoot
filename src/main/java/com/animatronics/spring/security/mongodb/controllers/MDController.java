@@ -49,12 +49,16 @@ public class MDController {
 
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
+            double deposit = body.get("deposit");
+            double withdraw = body.get("withdraw");
+            double tempBalance = mdData.get().getBalance() + deposit - withdraw;
 
             if (user.equals(mdOwner)) {
-                double deposit = body.get("deposit");
-                double withdraw = body.get("withdraw");
-                double tempBalance = mdData.get().getBalance() + deposit - withdraw;
-                _md.setBalance(tempBalance);
+                if (tempBalance < 0) {
+                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                } else {
+                    _md.setBalance(tempBalance);
+                }
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
