@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,10 +62,10 @@ public class DiaryController {
         List<Diary> diaries;
         if (isAdmin) {
           // Retrieve all diaries
-          diaries = diaryRepository.findAll();
+          diaries = diaryRepository.findAll(Sort.by(Sort.Direction.DESC, "time"));
         } else {
           // Retrieve diaries owned by the authenticated user
-          diaries = diaryRepository.findByOwner(owner);
+          diaries = diaryRepository.findByOwner(owner, Sort.by(Sort.Direction.DESC, "time"));
         }
 
         if (diaries.isEmpty()) {
