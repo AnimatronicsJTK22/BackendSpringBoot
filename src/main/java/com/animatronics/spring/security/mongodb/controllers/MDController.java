@@ -40,7 +40,7 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id,
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody String lastChangeDesc,
             @RequestBody Map<String, Double> body) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -58,6 +58,7 @@ public class MDController {
                     return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
                 } else {
                     _md.setBalance(tempBalance);
+                    _md.setLastChangeDesc(lastChangeDesc);
                 }
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);

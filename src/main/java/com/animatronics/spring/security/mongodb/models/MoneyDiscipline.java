@@ -10,14 +10,16 @@ public class MoneyDiscipline {
   @Id
   private String id;
   private double balance;
+  private String lastChangeDesc;
   private String owner;
 
   public MoneyDiscipline() {
 
   }
 
-  public MoneyDiscipline(double balance, String owner, LocalDateTime timeUpdated) {
+  public MoneyDiscipline(double balance, String lastChangeDesc, String owner, LocalDateTime timeUpdated) {
     this.balance = balance;
+    this.lastChangeDesc = lastChangeDesc;
     this.owner = owner;
   }
 
@@ -37,6 +39,14 @@ public class MoneyDiscipline {
     this.balance = balance;
   }
 
+  public String getLastChangeDesc() {
+    return this.lastChangeDesc;
+  }
+
+  public void setLastChangeDesc(String lastChangeDesc) {
+    this.lastChangeDesc = lastChangeDesc;
+  }
+
   public String getOwner() {
     return owner;
   }
@@ -47,7 +57,7 @@ public class MoneyDiscipline {
 
   @Override
   public String toString() {
-    return "MoneyDiscipline [id=" + id + ", balance=" + balance + ", owner="
+    return "MoneyDiscipline [id=" + id + ", balance=" + balance + ", lastChangeDesc=" + lastChangeDesc + ", owner="
         + owner + "]";
   }
 }
