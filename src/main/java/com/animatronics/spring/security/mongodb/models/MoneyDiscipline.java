@@ -17,7 +17,8 @@ public class MoneyDiscipline {
 
   }
 
-  public MoneyDiscipline(double balance, String lastChangeDesc, String owner, LocalDateTime timeUpdated) {
+  public MoneyDiscipline(String id, double balance, String lastChangeDesc, String owner, LocalDateTime timeUpdated) {
+    this.id = id;
     this.balance = balance;
     this.lastChangeDesc = lastChangeDesc;
     this.owner = owner;

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,8 +41,8 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody String lastChangeDesc,
-            @RequestBody Map<String, Double> body) {
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id,
+            @RequestBody Map<String, Object> body) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = ((UserDetails) authentication.getPrincipal()).getUsername();
@@ -49,9 +50,19 @@ public class MDController {
 
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
-            double deposit = body.get("deposit");
-            double withdraw = body.get("withdraw");
-            double tempBalance = mdData.get().getBalance() + deposit - withdraw;
+            double balance = Double.parseDouble(body.get("balance").toString());
+            String lastChangeDesc = body.get("lastChangeDesc").toString();
+            double tempBalance = balance;
+
+            if (body.containsKey("deposit")) {
+                double deposit = Double.parseDouble(body.get("deposit").toString());
+                tempBalance += deposit;
+            }
+
+            if (body.containsKey("withdraw")) {
+                double withdraw = Double.parseDouble(body.get("withdraw").toString());
+                tempBalance -= withdraw;
+            }
 
             if (user.equals(mdOwner)) {
                 if (tempBalance < 0) {
@@ -63,7 +74,19 @@ public class MDController {
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
+
             return new ResponseEntity<>(mdRepository.save(_md), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/money/{id}")
+    public ResponseEntity<MoneyDiscipline> getMDById(@PathVariable("id") String id) {
+        Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
+
+        if (mdData.isPresent()) {
+            return new ResponseEntity<>(mdData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
