@@ -1,16 +1,14 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
 import java.util.List;
-import java.util.Map;
-// import java.time.LocalDateTime;
-// import java.util.List;
+
 import java.util.Optional;
 import java.util.Set;
 
-// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.animatronics.spring.security.mongodb.payload.request.MoneyDisciplineRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,26 +39,26 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, 
-    @RequestBody Map<String, String> lastChangeDesc, @RequestBody Map<String, Double> body) {
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id,
+            @RequestBody MoneyDisciplineRequest request) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = ((UserDetails) authentication.getPrincipal()).getUsername();
-        String mdOwner = mdRepository.findById(id).get().getOwner();
 
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
-            double deposit = body.get("deposit");
-            double withdraw = body.get("withdraw");
-            String lcd = lastChangeDesc.get("lastChangeDesc");
-            double tempBalance = mdData.get().getBalance() + deposit - withdraw;
+            double deposit = request.getDeposit();
+            double withdraw = request.getWithdraw();
+            String lcd = request.getLastChangeDesc();
+            double tempBalance = _md.getBalance() + deposit - withdraw;
+            String mdOwner = _md.getOwner();
 
             if (user.equals(mdOwner)) {
                 if (tempBalance < 0) {
                     return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
                 } else {
-                    _md.setBalance(tempBalance);
                     _md.setLastChangeDesc(lcd);
+                    _md.setBalance(tempBalance);
                 }
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
