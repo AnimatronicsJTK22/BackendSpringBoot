@@ -1,5 +1,6 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
+import java.util.List;
 import java.util.Map;
 // import java.time.LocalDateTime;
 // import java.util.List;
@@ -33,7 +34,6 @@ import com.animatronics.spring.security.mongodb.models.Role;
 @RestController
 @RequestMapping("/api")
 public class MDController {
-
     @Autowired
     MDRepository mdRepository;
 
@@ -41,8 +41,8 @@ public class MDController {
     UserRepository userRepository;
 
     @PutMapping("/money/{id}")
-    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, @RequestBody String lastChangeDesc,
-            @RequestBody Map<String, Double> body) {
+    public ResponseEntity<MoneyDiscipline> updateMD(@PathVariable("id") String id, 
+    @RequestBody Map<String, String> lastChangeDesc, @RequestBody Map<String, Double> body) {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = ((UserDetails) authentication.getPrincipal()).getUsername();
@@ -52,6 +52,7 @@ public class MDController {
             MoneyDiscipline _md = mdData.get();
             double deposit = body.get("deposit");
             double withdraw = body.get("withdraw");
+            String lcd = lastChangeDesc.get("lastChangeDesc");
             double tempBalance = mdData.get().getBalance() + deposit - withdraw;
 
             if (user.equals(mdOwner)) {
@@ -59,7 +60,7 @@ public class MDController {
                     return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
                 } else {
                     _md.setBalance(tempBalance);
-                    _md.setLastChangeDesc(lastChangeDesc);
+                    _md.setLastChangeDesc(lcd);
                 }
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -78,6 +79,17 @@ public class MDController {
             return new ResponseEntity<>(mdData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/money")
+    public ResponseEntity<List<MoneyDiscipline>> getAllMD() {
+        List<MoneyDiscipline> mdList = mdRepository.findAll();
+
+        if (mdList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(mdList, HttpStatus.OK);
         }
     }
 
