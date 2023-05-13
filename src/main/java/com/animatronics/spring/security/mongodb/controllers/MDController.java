@@ -1,5 +1,6 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,7 +52,10 @@ public class MDController {
             String mdOwner = _md.getOwner();
 
             if (user.equals(mdOwner)) {
-                _md.setLastChangeDesc(lcd);
+                String[] existingLcd = _md.getLastChangeDesc();
+                String[] newLcd = Arrays.copyOf(existingLcd, existingLcd.length + 1);
+                newLcd[newLcd.length - 1] = lcd;
+                _md.setLastChangeDesc(newLcd);
                 _md.setBalance(balance);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
