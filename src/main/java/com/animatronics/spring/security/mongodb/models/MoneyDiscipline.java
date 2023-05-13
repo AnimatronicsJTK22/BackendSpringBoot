@@ -12,13 +12,13 @@ public class MoneyDiscipline {
   private double balance;
   private String[] lastChangeDesc;
   private String owner;
-  private LocalDateTime time;
+  private LocalDateTime[] time;
 
   public MoneyDiscipline() {
 
   }
 
-  public MoneyDiscipline(String id, double balance, String[] lastChangeDesc, String owner, LocalDateTime timeUpdated) {
+  public MoneyDiscipline(String id, double balance, String[] lastChangeDesc, String owner, LocalDateTime[] timeUpdated) {
     this.id = id;
     this.balance = balance;
     this.lastChangeDesc = lastChangeDesc;
@@ -58,11 +58,11 @@ public class MoneyDiscipline {
     this.owner = owner;
   }
   
-  public LocalDateTime getTime() {
+  public LocalDateTime[] getTime() {
     return this.time;
   }
 
-  public void setTime(LocalDateTime time) {
+  public void setTime(LocalDateTime[] time) {
     this.time = time;
   }
 

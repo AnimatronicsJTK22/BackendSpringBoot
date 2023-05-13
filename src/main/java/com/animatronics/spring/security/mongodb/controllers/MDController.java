@@ -1,6 +1,8 @@
 package com.animatronics.spring.security.mongodb.controllers;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,13 +52,18 @@ public class MDController {
             double balance = Double.parseDouble(request.get("balance").toString());
             String lcd = (String) request.get("lastChangeDesc");
             String mdOwner = _md.getOwner();
+            LocalDateTime time = LocalDateTime.now();
 
             if (user.equals(mdOwner)) {
                 String[] existingLcd = _md.getLastChangeDesc();
                 String[] newLcd = Arrays.copyOf(existingLcd, existingLcd.length + 1);
                 newLcd[newLcd.length - 1] = lcd;
+                LocalDateTime[] existingTime = _md.getTime();
+                LocalDateTime[] newTime = Arrays.copyOf(existingTime, existingTime.length + 1);
+                newTime[newTime.length - 1] = time;
                 _md.setLastChangeDesc(newLcd);
                 _md.setBalance(balance);
+                _md.setTime(newTime);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
@@ -71,7 +78,21 @@ public class MDController {
         Optional<MoneyDiscipline> mdData = mdRepository.findById(id);
 
         if (mdData.isPresent()) {
-            return new ResponseEntity<>(mdData.get(), HttpStatus.OK);
+            MoneyDiscipline moneyDiscipline = mdData.get();
+
+            // Sorting lastChangeDesc array in reverse order
+            List<String> lastChangeDescList = Arrays.asList(moneyDiscipline.getLastChangeDesc());
+            Collections.reverse(lastChangeDescList);
+            String[] lastChangeDescArray = lastChangeDescList.toArray(new String[0]);
+            moneyDiscipline.setLastChangeDesc(lastChangeDescArray);
+
+            // Sorting time array in reverse order
+            List<LocalDateTime> timeList = Arrays.asList(moneyDiscipline.getTime());
+            Collections.reverse(timeList);
+            LocalDateTime[] timeArray = timeList.toArray(new LocalDateTime[0]);
+            moneyDiscipline.setTime(timeArray);
+
+            return new ResponseEntity<>(moneyDiscipline, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
