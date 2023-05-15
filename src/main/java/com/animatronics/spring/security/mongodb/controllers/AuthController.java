@@ -203,13 +203,11 @@ public class AuthController {
 
       for (Role role : roles) {
         if (role.getId().equals("6420f5471a943f643d51bcf6")) {
-          return ResponseEntity.status(HttpStatus.FORBIDDEN)
-              .body(new MessageResponse("Could not delete admin role!"));
-        } else {
-          userRepository.deleteById(id);
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Could not delete admin user!"));
         }
       }
-
+      userRepository.deleteById(id);
+      mdRepository.deleteById(id);
       return ResponseEntity.ok(new MessageResponse("User with ID " + id + " has been deleted successfully!"));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
