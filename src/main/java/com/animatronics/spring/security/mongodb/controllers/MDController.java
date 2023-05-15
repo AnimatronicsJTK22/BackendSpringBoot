@@ -2,7 +2,6 @@ package com.animatronics.spring.security.mongodb.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -79,19 +78,6 @@ public class MDController {
 
         if (mdData.isPresent()) {
             MoneyDiscipline moneyDiscipline = mdData.get();
-
-            // Sorting lastChangeDesc array in reverse order
-            List<String> lastChangeDescList = Arrays.asList(moneyDiscipline.getLastChangeDesc());
-            Collections.reverse(lastChangeDescList);
-            String[] lastChangeDescArray = lastChangeDescList.toArray(new String[0]);
-            moneyDiscipline.setLastChangeDesc(lastChangeDescArray);
-
-            // Sorting time array in reverse order
-            List<LocalDateTime> timeList = Arrays.asList(moneyDiscipline.getTime());
-            Collections.reverse(timeList);
-            LocalDateTime[] timeArray = timeList.toArray(new LocalDateTime[0]);
-            moneyDiscipline.setTime(timeArray);
-
             return new ResponseEntity<>(moneyDiscipline, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
