@@ -142,7 +142,8 @@ public class AuthController {
     user.setRoles(roles);
     userRepository.save(user);
 
-    mdRepository.save(new MoneyDiscipline(user.getId(),0, new String[]{"create account"}, signUpRequest.getUsername(), new LocalDateTime[]{LocalDateTime.now()}));
+    mdRepository.save(new MoneyDiscipline(user.getId(), 0, new String[] { "create account" },
+        signUpRequest.getUsername(), new LocalDateTime[] { LocalDateTime.now() }));
 
     return ResponseEntity.ok(new MessageResponse("User and money notes registered successfully!"));
   }
@@ -196,10 +197,18 @@ public class AuthController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<MessageResponse> deleteUserById(@PathVariable("id") String id) {
     try {
-      String owner = userRepository.findById(id).get().getUsername();
-      String mdId = mdRepository.findByOwner(owner).get().getId();
-      userRepository.deleteById(id);
-      mdRepository.deleteById(mdId);
+      String user = userRepository.findById(id).get().getUsername();
+      Optional<User> userData = userRepository.findByUsername(user);
+      Set<Role> roles = userData.get().getRoles();
+
+      for (Role role : roles) {
+        if (role.getId().equals("6420f5471a943f643d51bcf6")) {
+          return ResponseEntity.status(HttpStatus.FORBIDDEN)
+              .body(new MessageResponse("Could not delete admin role!"));
+        } else {
+          userRepository.deleteById(id);
+        }
+      }
 
       return ResponseEntity.ok(new MessageResponse("User with ID " + id + " has been deleted successfully!"));
     } catch (Exception e) {
