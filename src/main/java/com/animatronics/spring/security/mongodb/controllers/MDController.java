@@ -50,14 +50,14 @@ public class MDController {
         if (mdData.isPresent()) {
             MoneyDiscipline _md = mdData.get();
             double balance = Double.parseDouble(request.get("balance").toString());
-            String lcd = (String) request.get("lastChangeDesc");
+            String historyDesc = (String) request.get("historyDesc");
             String mdOwner = _md.getOwner();
             LocalDateTime time = LocalDateTime.now();
 
             if (user.equals(mdOwner)) {
                 String[] existingLcd = _md.getLastChangeDesc();
                 String[] newLcd = Arrays.copyOf(existingLcd, existingLcd.length + 1);
-                newLcd[newLcd.length - 1] = lcd;
+                newLcd[newLcd.length - 1] = historyDesc;
                 LocalDateTime[] existingTime = _md.getTime();
                 LocalDateTime[] newTime = Arrays.copyOf(existingTime, existingTime.length + 1);
                 newTime[newTime.length - 1] = time;
