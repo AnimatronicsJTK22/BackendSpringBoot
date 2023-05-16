@@ -50,6 +50,7 @@ public class MDController {
             MoneyDiscipline _md = mdData.get();
             double balance = Double.parseDouble(request.get("balance").toString());
             String historyDesc = (String) request.get("historyDesc");
+            String balanceChange = (String) request.get("balanceChange");
             String mdOwner = _md.getOwner();
             LocalDateTime time = LocalDateTime.now();
 
@@ -57,11 +58,15 @@ public class MDController {
                 String[] existingLcd = _md.getLastChangeDesc();
                 String[] newLcd = Arrays.copyOf(existingLcd, existingLcd.length + 1);
                 newLcd[newLcd.length - 1] = historyDesc;
+                String[] existingBC = _md.getBalanceDesc();
+                String[] newBC = Arrays.copyOf(existingBC, existingBC.length + 1);
+                newBC[newBC.length - 1] = balanceChange;
                 LocalDateTime[] existingTime = _md.getTime();
                 LocalDateTime[] newTime = Arrays.copyOf(existingTime, existingTime.length + 1);
                 newTime[newTime.length - 1] = time;
-                _md.setLastChangeDesc(newLcd);
                 _md.setBalance(balance);
+                _md.setLastChangeDesc(newLcd);
+                _md.setBalanceDesc(newBC);
                 _md.setTime(newTime);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);

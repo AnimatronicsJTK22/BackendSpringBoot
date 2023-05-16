@@ -11,6 +11,7 @@ public class MoneyDiscipline {
   private String id;
   private double balance;
   private String[] lastChangeDesc;
+  private String[] balanceDesc;
   private String owner;
   private LocalDateTime[] time;
 
@@ -18,10 +19,11 @@ public class MoneyDiscipline {
 
   }
 
-  public MoneyDiscipline(String id, double balance, String[] lastChangeDesc, String owner, LocalDateTime[] timeUpdated) {
+  public MoneyDiscipline(String id, double balance, String[] lastChangeDesc, String[] balanceDesc, String owner, LocalDateTime[] timeUpdated) {
     this.id = id;
     this.balance = balance;
     this.lastChangeDesc = lastChangeDesc;
+    this.balanceDesc = balanceDesc;
     this.owner = owner;
     this.time = timeUpdated;
   }
@@ -48,6 +50,14 @@ public class MoneyDiscipline {
 
   public void setLastChangeDesc(String[] lastChangeDesc) {
     this.lastChangeDesc = lastChangeDesc;
+  }
+
+  public String[] getBalanceDesc() {
+    return this.balanceDesc;
+  }
+
+  public void setBalanceDesc(String[] balanceDesc) {
+    this.balanceDesc = balanceDesc;
   }
 
   public String getOwner() {

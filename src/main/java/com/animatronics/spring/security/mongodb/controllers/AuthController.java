@@ -143,7 +143,7 @@ public class AuthController {
     userRepository.save(user);
 
     mdRepository.save(new MoneyDiscipline(user.getId(), 0, new String[] { "create account" },
-        signUpRequest.getUsername(), new LocalDateTime[] { LocalDateTime.now() }));
+        new String[]{ "+Rp 0" }, signUpRequest.getUsername(), new LocalDateTime[] { LocalDateTime.now() }));
 
     return ResponseEntity.ok(new MessageResponse("User and money notes registered successfully!"));
   }
