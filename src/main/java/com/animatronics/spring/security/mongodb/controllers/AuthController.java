@@ -43,6 +43,8 @@ import com.animatronics.spring.security.mongodb.repository.RoleRepository;
 import com.animatronics.spring.security.mongodb.repository.UserRepository;
 import com.animatronics.spring.security.mongodb.security.jwt.JwtUtils;
 import com.animatronics.spring.security.mongodb.security.services.UserDetailsImpl;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -104,10 +106,13 @@ public class AuthController {
           .body(new MessageResponse("Error: Email is already in use!"));
     }
 
+    // avatar
+    String gravatarUrl = generateGravatarUrl(signUpRequest.getEmail());
+
     // Create new user's account
     User user = new User(signUpRequest.getUsername(),
         signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()));
+        encoder.encode(signUpRequest.getPassword()), gravatarUrl);
 
     Set<String> strRoles = signUpRequest.getRoles();
     Set<Role> roles = new HashSet<>();
@@ -174,7 +179,7 @@ public class AuthController {
       _user.setUsername(user.getUsername());
       _user.setEmail(user.getEmail());
       _user.setPassword(user.getPassword());
-      _user.setRoles(user.getRoles());
+      // _user.setRoles(user.getRoles());
       return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -214,5 +219,22 @@ public class AuthController {
           .body(new MessageResponse("Could not delete user with ID " + id));
     }
   }
+
+  private String generateGravatarUrl(String email) {
+    try {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(email.trim().toLowerCase().getBytes());
+        byte[] digest = md.digest();
+        StringBuilder builder = new StringBuilder();
+        for (byte b : digest) {
+            builder.append(String.format("%02x", b));
+        }
+        String hash = builder.toString();
+        return "https://www.gravatar.com/avatar/" + hash;
+    } catch (NoSuchAlgorithmException e) {
+        // Handle the exception
+        return ""; // Or provide a default avatar URL
+    }
+}
 
 }

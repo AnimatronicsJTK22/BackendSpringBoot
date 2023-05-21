@@ -32,13 +32,17 @@ public class User {
   @DBRef
   private Set<Role> roles = new HashSet<>();
 
+  @NotBlank
+  private String avatar;
+
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(String username, String email, String password, String avatar) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.avatar = avatar;
   }
 
   public String getId() {
